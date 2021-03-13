@@ -5,10 +5,10 @@
 # Specifically tagged base image for consistency
 FROM node:14.16.0 as build-deps
 WORKDIR /usr/src/app
-COPY package.json yarn.lock ./
-RUN yarn
+COPY package.json package-lock.json ./
+RUN npm install
 COPY . ./
-RUN yarn build
+RUN npm run build
 
 # Production Environment
 # Specifically tagged base image for consistency
