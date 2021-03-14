@@ -1,5 +1,6 @@
 import React from "react";
 import { Box } from "grommet";
+import { UserMenu } from "./UserMenu";
 
 export const AppBar = (props: any) => {
   return (
@@ -13,6 +14,9 @@ export const AppBar = (props: any) => {
       elevation="medium"
       style={{ zIndex: 1 }}
       {...props}
-    />
+    >
+      {props.children}
+      <UserMenu></UserMenu>
+    </Box>
   );
 };

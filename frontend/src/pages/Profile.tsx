@@ -1,6 +1,6 @@
 import React from "react";
 import { Box } from "grommet";
 
-export const User = () => {
+export const Profile = () => {
   return <Box></Box>;
 };
