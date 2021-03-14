@@ -32,6 +32,18 @@ docker-compose up frontend
 
 Then navigate to http://localhost:8000 to see the frontend
 
+### Run bash commands in frontned dev environment
+
+```bash
+docker-compose up frontend # (if it's not already up)
+```
+
+In a separate shell
+```bash
+docker-compose exec frontend bash
+# and run the npm, etc. commands you need to run the shell that just opened
+```
+
 ## Available Scripts
 
 In the project directory, you can run:
