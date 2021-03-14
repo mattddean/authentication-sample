@@ -26,4 +26,4 @@ VOLUME /home/node/.npm
 
 USER node
 
-CMD ["bash"]
+CMD ["npm", "run", "start"]
