@@ -1,6 +1,8 @@
 # Authentication Sample
 
-## Initial React Setup
+## How this repo was set up
+
+(No need to run these commands; just here for posterity.)
 
 ```bash
 npx create-react-app authentication-sample --template typescript --use-npm
