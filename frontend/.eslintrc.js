@@ -21,7 +21,8 @@ module.exports = {
         "react-hooks/rules-of-hooks": "error",
         "react-hooks/exhaustive-deps": "warn",
         "react/prop-types": "error",
-        "@typescript-eslint/no-empty-function": "off"
+        "@typescript-eslint/no-empty-function": "off",
+        "react/display-name": "off"
       },
       "parserOptions": {
         "project": "./tsconfig.json",
