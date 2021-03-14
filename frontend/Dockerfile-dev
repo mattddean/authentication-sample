@@ -22,10 +22,13 @@ RUN node_user=node \
     && mkdir /home/${node_user}/.npm \
     && chown ${node_user}:${node_primary_group} /home/${node_user}/.npm \
     && mkdir /usr/src/app/node_modules \
-    && chown ${node_user}:${node_primary_group} /usr/src/app/node_modules
+    && chown ${node_user}:${node_primary_group} /usr/src/app/node_modules \
+    && mkdir /usr/src/app/node_modules/.bin \
+    && chown ${node_user}:${node_primary_group} /usr/src/app/node_modules/.bin
 
 VOLUME /home/node/.npm
 VOLUME /usr/src/app/node_modules
+VOLUME /usr/src/app/node_modules/.bin
 
 USER node
 
