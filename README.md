@@ -1,6 +1,34 @@
-# Getting Started with Create React App
+# Authentication Sample
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Initial React Setup
+
+```bash
+npx create-react-app authentication-sample --template typescript --use-npm
+```
+
+## Set up your frontend development environment
+
+### Local Dependencies
+- Docker
+
+### Setup
+
+```bash
+CURRENT_USER_ID=$(id -u) CURRENT_GROUP_ID=$(id -g) docker-compose build frontend
+docker-compose run --rm frontend bash
+npm install # install packages for frontend app in container and node_modules/.bin exectuables for host (like eslint)
+exit
+```
+
+### Serve React on host port 8000
+
+```bash
+docker-compose up frontend
+```
+
+> Warnings about CURRENT_USER_ID and CURRENT_GROUP_ID variables not being set can be safely ignored. These were only used during the image build process, not the container run process.
+
+Then navigate to http://localhost:8000 to see the frontend
 
 ## Available Scripts
 
