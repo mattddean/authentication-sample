@@ -44,6 +44,8 @@ docker-compose exec frontend bash
 # and run the npm, etc. commands you need to run the shell that just opened
 ```
 
+> It may be possible to run `npm` commands on your host computer, but it's not recommended for consistency between different developers' environments.
+
 ## Available Scripts
 
 In the project directory, you can run:
