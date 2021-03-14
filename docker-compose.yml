@@ -1,0 +1,42 @@
+version: "3.8"
+
+services:
+  assets:
+    image: flashspys/nginx-static
+    ports:
+      - 8080:80
+    volumes:
+      - ./frontend:/static
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile-dev
+      args:
+        USER_ID: ${CURRENT_USER_ID}
+        GROUP_ID: ${CURRENT_GROUP_ID}
+    ports:
+      - 8000:80
+    volumes:
+      - ./frontend:/usr/src/app
+      - frontend_home_npm:/home/node/.npm
+      - frontend_node_modules:/usr/src/app/node_modules
+    environment:
+      HANDLER: application/public/index.php
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    volumes:
+      - backend_home_npm:/home/user/.npm
+    ports:
+      - 8080:80
+
+volumes:
+  # save npm cache
+  frontend_home_npm:
+  # save npm cache
+  backend_home_npm:
+  # fast node_modules
+  frontend_node_modules:

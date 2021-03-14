@@ -1,0 +1,32 @@
+FROM node:14.16.0
+WORKDIR /usr/src/app
+
+# Manage permissions for shared volume on Linux hosts 
+# so that files don't get written to host filesystem as root.
+# We simply change the Group ID of the node user's primary group (node)
+# to the passed in Group ID, then change the User ID and Group ID of the
+# node user itself to the passed in User ID and Group ID. Thus, permissions
+# will agree between the host and the container since the User and Group
+# ID's of the files will match. Container sees host files as owned by user node
+# and host sees files owned by whichever user build this image.
+# Then we create and chown all named volumes so that the node user has access to them.
+ARG USER_ID
+ARG GROUP_ID
+# node_primary_group will be node
+RUN node_user=node \
+    && node_primary_group=$(groups ${node_user} | awk -F: '{ print $1}') \
+    && echo ${node_user} \
+    && echo ${node_primary_group} \
+    && groupmod -g ${GROUP_ID} ${node_primary_group} \
+    && usermod -u ${USER_ID} -g ${GROUP_ID} ${node_user} \
+    && mkdir /home/${node_user}/.npm \
+    && chown ${node_user}:${node_primary_group} /home/${node_user}/.npm \
+    && mkdir /usr/src/app/node_modules \
+    && chown ${node_user}:${node_primary_group} /usr/src/app/node_modules
+
+VOLUME /home/node/.npm
+VOLUME /usr/src/app/node_modules
+
+USER node
+
+CMD ["bash"]
