@@ -1,26 +1,29 @@
 module.exports = {
-    "extends": [
+  "overrides": [
+    {
+      "files": ["*.ts", "*.tsx"],
+      "extends": [
         "plugin:react/recommended",
         "plugin:@typescript-eslint/recommended",
         "prettier", // eslint-config-prettier
         "plugin:prettier/recommended"
-    ],
-    "plugins": [
+      ],
+      "plugins": [
         "react",
         "prettier",
         "@typescript-eslint",
         "react-hooks"
-    ],
-    "rules": {
+      ],
+      "rules": {
         "@typescript-eslint/no-unused-vars": "error",
         "@typescript-eslint/no-explicit-any": "off",
         "@typescript-eslint/explicit-module-boundary-types": "off",
         "react-hooks/rules-of-hooks": "error",
         "react-hooks/exhaustive-deps": "warn",
-        "react/prop-types": "error"
-    },
-    "parser": "@typescript-eslint/parser",
-    "parserOptions": {
+        "react/prop-types": "error",
+        "@typescript-eslint/no-empty-function": "off"
+      },
+      "parserOptions": {
         "project": "./tsconfig.json",
         "tsconfigRootDir": __dirname,
         "ecmaVersion": 2020,
@@ -29,11 +32,14 @@ module.exports = {
             "implied-strict": true,
             "modules": true
         }
-    },
-    "settings": {
+      },
+      "settings": {
         "react": {
-            "pragma": "React",
-            "version": "detect"
+          "pragma": "React",
+          "version": "detect"
         }
+      }        
     }
+  ],
+  "parser": "@typescript-eslint/parser",
 }
