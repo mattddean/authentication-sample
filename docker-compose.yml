@@ -20,8 +20,6 @@ services:
     volumes:
       - ./frontend:/usr/src/app
       - frontend_home_npm:/home/node/.npm
-      - frontend_node_modules:/usr/src/app/node_modules
-      - ./frontend/node_modules/.bin:/usr/src/app/node_modules/.bin
     environment:
       HANDLER: application/public/index.php
 
@@ -35,9 +33,7 @@ services:
       - 8080:80
 
 volumes:
-  # save npm cache
+  # persistent npm cache
   frontend_home_npm:
-  # save npm cache
+  # persistent npm cache
   backend_home_npm:
-  # fast node_modules
-  frontend_node_modules:
