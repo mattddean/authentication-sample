@@ -15,14 +15,13 @@ module.exports = {
         "react-hooks"
       ],
       "rules": {
-        "@typescript-eslint/no-unused-vars": "error",
         "@typescript-eslint/no-explicit-any": "off",
         "@typescript-eslint/explicit-module-boundary-types": "off",
         "react-hooks/rules-of-hooks": "error",
         "react-hooks/exhaustive-deps": "warn",
         "react/prop-types": "error",
         "@typescript-eslint/no-empty-function": "off",
-        "react/display-name": "off"
+        "react/display-name": "off",
       },
       "parserOptions": {
         "project": "./tsconfig.json",

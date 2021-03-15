@@ -5,6 +5,7 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { Login } from "./pages/Login";
 import { Profile } from "./pages/Profile";
 import { CreateAccount } from "./pages/CreateAccount";
+import { UserContext, userContextDefaultValue } from "./contexts/UserContext";
 
 const theme = {
   global: {
@@ -17,31 +18,34 @@ const theme = {
 };
 
 function App() {
+  const userContextValue = 
   return (
-    <Grommet theme={theme} full>
-      <Router>
-        <AppBar>
-          <Heading level="3" margin="none">
-            Authentication Sample
-          </Heading>
-        </AppBar>
-        <Box direction="row" flex overflow={{ horizontal: "hidden" }}>
-          <Box flex align="center" justify="center">
-            <Switch>
-              <Route exact path="/">
-                <Login />
-              </Route>
-              <Route path="/profile">
-                <Profile />
-              </Route>
-              <Route path="/signup">
-                <CreateAccount />
-              </Route>
-            </Switch>
+    <UserContext.Provider value={userContextDefaultValue}>
+      <Grommet theme={theme} full>
+        <Router>
+          <AppBar>
+            <Heading level="3" margin="none">
+              Authentication Sample
+            </Heading>
+          </AppBar>
+          <Box direction="row" flex overflow={{ horizontal: "hidden" }}>
+            <Box flex align="center" justify="center">
+              <Switch>
+                <Route exact path="/">
+                  <Login />
+                </Route>
+                <Route path="/profile">
+                  <Profile />
+                </Route>
+                <Route path="/signup">
+                  <CreateAccount />
+                </Route>
+              </Switch>
+            </Box>
           </Box>
-        </Box>
-      </Router>
-    </Grommet>
+        </Router>
+      </Grommet>
+    </UserContext.Provider>
   );
 }
 

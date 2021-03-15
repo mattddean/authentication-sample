@@ -8,8 +8,13 @@
 		"editor.formatOnSave": true,
 		"editor.codeActionsOnSave": {
 			"source.fixAll.eslint": true
-		  },
-		  "eslint.validate": ["javascript", "typescript", "typescriptreact"]
+		},
+		"eslint.validate": [
+			"javascript",
+			"typescript",
+			"typescriptreact"
+		],
+		"editor.tabSize": 2
 	},
 	"extensions": {
 		"recommendations": [
