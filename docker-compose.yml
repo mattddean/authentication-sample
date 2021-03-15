@@ -1,17 +1,10 @@
 version: "3.8"
 
 services:
-  assets:
-    image: flashspys/nginx-static
-    ports:
-      - 8080:80
-    volumes:
-      - ./frontend:/static
-
   frontend:
     build:
-      context: ./frontend
-      dockerfile: Dockerfile-dev
+      context: ./
+      dockerfile: Dockerfile-dev-node
       args:
         USER_ID: ${CURRENT_USER_ID}
         GROUP_ID: ${CURRENT_GROUP_ID}
@@ -20,20 +13,51 @@ services:
     volumes:
       - ./frontend:/usr/src/app
       - frontend_home_npm:/home/node/.npm
-    environment:
-      HANDLER: application/public/index.php
 
   backend:
     build:
-      context: ./backend
-      dockerfile: Dockerfile
-    volumes:
-      - backend_home_npm:/home/user/.npm
+      context: ./
+      dockerfile: Dockerfile-dev-node
+      args:
+        USER_ID: ${CURRENT_USER_ID}
+        GROUP_ID: ${CURRENT_GROUP_ID}
     ports:
-      - 8080:80
+      - 8080:3000
+    volumes:
+      - ./backend:/usr/src/app
+      - backend_home_npm:/home/node/.npm
+    environment: 
+      - REDIS_HOST=cache
+      - MONGO_HOST=db
+    depends_on:
+      - db
+      - cache
+    command: ["npm", "run", "dev"]
+  
+  cache:
+    image: redis:6.2.1-alpine
+    ports:
+      - 6379:6379
+    command: ['--requirepass "secret"']
+
+  db:
+    image: mongo:3.6.22-xenial
+    ports: 
+      - 27017:27017
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+      MONGO_INITDB_DATABASE: auth
+      MONGO_USERNAME: admin
+      MONGO_PASSWORD: secret
+    volumes:
+      - db_data:/data/db
+      - ./db/mongo-init.sh:/docker-entrypoint-initdb.d/mongo-init.sh:ro
 
 volumes:
   # persistent npm cache
   frontend_home_npm:
   # persistent npm cache
   backend_home_npm:
+  # mongodb data
+  db_data:
