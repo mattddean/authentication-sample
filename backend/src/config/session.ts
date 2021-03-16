@@ -3,7 +3,7 @@ import { IN_PROD } from "./app";
 
 const HALF_HOUR = 1000 * 60 * 30;
 
-const {
+export const {
   SESSION_SECRET = "some_secret",
   SESSION_NAME = "sid",
   SESSION_IDLE_TIMEOUT = HALF_HOUR,
