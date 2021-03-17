@@ -40,19 +40,19 @@ curl -v -X POST localhost:8080/register -H 'Content-Type: application/json' \
 ## Logging In
 
 ```bash
-# without cookie (responds with message: "Login successful")
+# without cookie (responds with message: {"Login successful"})
 curl -v -X POST localhost:8080/login -H 'Content-Type: application/json' \
   -d '{ "email": "someone@gmail.com", "password": "a(password54" }'
 
-# fail: with cookie (responds with message: "You are already logged in")
+# fail: with cookie (responds with message: {"You are already logged in"})
 curl -v -X POST localhost:8080/login -H 'Content-Type: application/json' \
   -d '{ "email": "someone@gmail.com", "password": "a(password54" }' --cookie 'sid=s%3AyurLv-_0u9wCJZAkGyDc8cQ-OPNPSAXa.Qe11bpohgT2XoHNMgOY7Yh1NNKgTyItiYGUb0d80jKY'
 
-# fail: user doesn't exist (responds with message: "Invalid email or password")
+# fail: user doesn't exist (responds with {message: "Invalid email or password"})
 curl -v -X POST localhost:8080/login -H 'Content-Type: application/json' \
   -d '{ "email": "another@gmail.com", "password": "a(password54" }'
 
-# fail: incorrect password (responds with message: "Invalid email or password")
+# fail: incorrect password (responds with {message: "Invalid email or password"})
 curl -v -X POST localhost:8080/login -H 'Content-Type: application/json' \
   -d '{ "email": "someone@gmail.com", "password": "a(password23" }'
 ```
@@ -64,6 +64,16 @@ curl -v -X POST localhost:8080/login -H 'Content-Type: application/json' \
 curl -v -X POST localhost:8080/logout \
   --cookie sid=s%3AbD9a-v0qQ9shJaFT5shR565ZtoIfdvCT.gRf2cDpAE6rh6tW6tlnXnpFWBbQ0OTHt09RKl6GCNoc
 
-# fail: without cookie (responds with message: "Logout successful")
+# fail: without cookie (responds with {message: "You must be logged in"})
 curl -v -X POST localhost:8080/logout
+```
+
+## Getting authenticated user
+
+```bash
+# with cookie (responds with message {email: <email>, password: <password>})
+curl -v localhost:8080/me --cookie sid=s%3ATd2hIdcEKi5NjNcq5nKO_QDDBCSEg--f.aIJLZOkYkdxNs4kVcDFJoUAGASJ62myswncrV3w7M%2FI
+
+# fail: without cookie (responds with {message: "You must be logged in"})
+curl -v localhost:8080/me
 ```

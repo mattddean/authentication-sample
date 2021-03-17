@@ -37,4 +37,8 @@ userSchema.methods.passwordMatches = function (password: string) {
   return User.compare(password, this.password);
 };
 
+userSchema.set("toJSON", {
+  transform: (doc, { email, name }, options) => ({ email, name }),
+});
+
 export const User = model("User", userSchema);
