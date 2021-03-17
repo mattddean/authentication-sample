@@ -1,5 +1,13 @@
 Based on YouTube series https://www.youtube.com/playlist?list=PLcCp4mjO-z9_HmJ5rSonmiEGfP-kyRMlI
 
+## Start development environment
+
+```bash
+docker-compose up backend
+```
+
+> The `backend` service depends on `db` and `cache`, so these will be brought up automatically.
+
 ## MongoDB Shell
 ### Connect to MongoDB shell
 
@@ -19,7 +27,43 @@ From within MongoDB shell
 db.users.deleteMany({})
 ```
 
-## Password Authentication
+## Redis Shell
+
+### Connect to Redis shell
+
+With the `backend` service running...
+
+```bash
+docker-compose exec cache redis-cli -a secret
+```
+
+### View active sessions
+
+From within Redis shell
+
+```bash
+scan 0
+```
+
+### Get cookie information for a session
+
+From within Redis shell
+
+```bash
+get "<session>"
+```
+
+### Flush all sessions
+
+From within Redis shell
+
+```bash
+flushall
+```
+
+## Routes
+
+### Password Authentication
 ```bash
 # invalid passwords
 curl -v -X POST localhost:8080/register -H 'Content-Type: application/json' \
@@ -37,7 +81,7 @@ curl -v -X POST localhost:8080/register -H 'Content-Type: application/json' \
   -d '{ "email": "someone@gmail.com", "name": "Someone", "password": "Ś(54343434", "passwordConfirmation": "Ś(54343434" }'
 ```
 
-## Logging In
+### Logging In
 
 ```bash
 # without cookie (responds with message: {"Login successful"})
@@ -57,7 +101,7 @@ curl -v -X POST localhost:8080/login -H 'Content-Type: application/json' \
   -d '{ "email": "someone@gmail.com", "password": "a(password23" }'
 ```
 
-## Logging Out
+### Logging Out
 
 ```bash
 # with cookie (responds with message: "Logout successful")
@@ -68,7 +112,7 @@ curl -v -X POST localhost:8080/logout \
 curl -v -X POST localhost:8080/logout
 ```
 
-## Getting authenticated user
+### Getting authenticated user
 
 ```bash
 # with cookie (responds with message {email: <email>, password: <password>})
@@ -77,3 +121,7 @@ curl -v localhost:8080/me --cookie sid=s%3ATd2hIdcEKi5NjNcq5nKO_QDDBCSEg--f.aIJL
 # fail: without cookie (responds with {message: "You must be logged in"})
 curl -v localhost:8080/me
 ```
+
+# TODO
+
+- secure=false on session cookie

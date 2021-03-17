@@ -1,7 +1,12 @@
 import express from "express";
 import session, { Store } from "express-session";
 import { SESSION_OPTIONS } from "./config";
-import { InternalServerError, NotFoundError } from "./middleware";
+import {
+  catchAsync,
+  active,
+  InternalServerError,
+  NotFoundError,
+} from "./middleware";
 import { login, register, me } from "./routes";
 
 export const createApp = (store: Store) => {
@@ -15,6 +20,8 @@ export const createApp = (store: Store) => {
       store,
     })
   );
+
+  app.use(catchAsync(active));
 
   app.use(me);
 
