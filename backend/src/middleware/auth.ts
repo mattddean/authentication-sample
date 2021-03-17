@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from "express";
+import { Session } from "express-session";
 import { isLoggedIn, logOut } from "../auth";
 import { SESSION_ABSOLUTE_TIMEOUT } from "../config";
 import { BadRequest, Unauthorized } from "../errors";
@@ -25,7 +26,7 @@ export const active = async (
   next: NextFunction
 ) => {
   if (isLoggedIn(req)) {
-    const { createdAt } = req.session as Express.Session;
+    const { createdAt } = req.session as Session;
 
     if (Date.now() > createdAt + SESSION_ABSOLUTE_TIMEOUT) {
       await logOut(req, res);

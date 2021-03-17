@@ -2,7 +2,7 @@ import { Router } from "express";
 import { registerSchema, validate } from "../validation";
 import { User } from "../models";
 import { logIn } from "../auth";
-import { guest, catchAsync } from "../middleware";
+import { guest, catchAsyncRequest } from "../middleware";
 import { BadRequest } from "../errors";
 
 const router = Router();
@@ -10,7 +10,7 @@ const router = Router();
 router.post(
   "/register",
   guest,
-  catchAsync(async (req, res) => {
+  catchAsyncRequest(async (req, res) => {
     await validate(registerSchema, req.body);
 
     const { email, name, password } = req.body;

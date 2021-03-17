@@ -1,6 +1,14 @@
 import { SessionOptions } from "express-session";
 import { IN_PROD } from "./app";
 
+// merge declaration globally
+declare module "express-session" {
+  interface Session {
+    userId: string;
+    createdAt: number;
+  }
+}
+
 const ONE_HOUR = 1000 * 60 * 60;
 const HALF_HOUR = ONE_HOUR / 2;
 const SIX_HOURS = ONE_HOUR * 6;

@@ -2,7 +2,7 @@ import express from "express";
 import session, { Store } from "express-session";
 import { SESSION_OPTIONS } from "./config";
 import {
-  catchAsync,
+  catchAsyncRequest,
   active,
   InternalServerError,
   NotFoundError,
@@ -21,7 +21,7 @@ export const createApp = (store: Store) => {
     })
   );
 
-  app.use(catchAsync(active));
+  app.use(catchAsyncRequest(active));
 
   app.use(me);
 

@@ -1,8 +1,8 @@
 import { Router } from "express";
 import { logIn, logOut } from "../auth";
 import { Unauthorized } from "../errors";
-import { catchAsync, guest, auth } from "../middleware";
-import { User } from "../models";
+import { catchAsyncRequest, guest, auth } from "../middleware";
+import { User, UserDocument } from "../models";
 import { validate, loginSchema } from "../validation";
 
 const INCORRECT_EMAIL_OR_PASSWORD_STRING = "Incorrect email or password";
@@ -12,12 +12,12 @@ const router = Router();
 router.post(
   "/login",
   guest,
-  catchAsync(async (req, res) => {
+  catchAsyncRequest(async (req, res) => {
     await validate(loginSchema, req.body);
 
     const { email, password } = req.body;
 
-    const user = await User.findOne({ email });
+    const user = (await User.findOne({ email })) as UserDocument;
 
     // thwart timing attack
     if (!user) {
@@ -41,7 +41,7 @@ router.post(
 router.post(
   "/logout",
   auth,
-  catchAsync(async (req, res) => {
+  catchAsyncRequest(async (req, res) => {
     await logOut(req, res);
 
     res.json({ message: "Logout successful" });

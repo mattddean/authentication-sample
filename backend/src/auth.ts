@@ -9,7 +9,7 @@ export const logIn = (req: Request, userId: string) => {
 };
 
 export const logOut = (req: Request, res: Response) =>
-  new Promise((resolve, reject) => {
+  new Promise<void>((resolve, reject) => {
     req.session.destroy((err: Error) => {
       if (err) reject(err);
 

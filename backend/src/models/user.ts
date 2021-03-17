@@ -1,15 +1,24 @@
-import { Schema, model, Document } from "mongoose";
+import { Schema, Model, Document, model } from "mongoose";
 import { hash, compare } from "bcryptjs";
 import { HASH_WORK_FACTOR } from "../config";
 
-interface UserDocument extends Document {
+// instance properties and methods
+export interface UserDocument extends Document {
   email: string;
   name: string;
   password: string;
   passwordMatches: (password: string) => Promise<boolean>;
 }
 
-const userSchema = new Schema(
+// static properties and methods
+export interface UserModel extends Model<UserDocument> {
+  compare: (
+    plaintextPassword: string,
+    hashedPassword: string
+  ) => Promise<boolean>;
+}
+
+export const userSchema = new Schema<UserDocument>(
   {
     email: String,
     name: String,
@@ -38,7 +47,17 @@ userSchema.methods.passwordMatches = function (password: string) {
 };
 
 userSchema.set("toJSON", {
-  transform: (doc, { email, name }, options) => ({ email, name }),
+  transform: (
+    doc: Document,
+    { email, name }: { email: string; name: string },
+    options: any // eslint-disable-line @typescript-eslint/no-unused-vars
+  ) => ({
+    email,
+    name,
+  }),
 });
 
-export const User = model("User", userSchema);
+export const User: UserModel = model<UserDocument, UserModel>(
+  "User",
+  userSchema
+);
