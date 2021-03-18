@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "rm -rf dist && tsc",
+    "build-prod": "rm -rf dist && tsc --sourceMap false",
     "dev": "ts-node-dev --transpile-only --no-notify src"
   },
   "author": "",
