@@ -6,7 +6,7 @@ const {
   MONGO_HOST = "localhost",
   MONGO_PORT = "27017",
   MONGO_DATABASE = "auth",
-  MONGO_CONN_STRING_ENDING="/?ssl=true&ssl_ca_certs=rds-combined-ca-bundle.pem&replicaSet=rs0&readPreference=secondaryPreferred&retryWrites=false`"
+  MONGO_CONN_STRING_ENDING = "/?ssl=true&ssl_ca_certs=rds-combined-ca-bundle.pem&replicaSet=rs0&readPreference=secondaryPreferred&retryWrites=false`",
 } = process.env;
 
 export const MONGO_URI = `mongodb://${MONGO_USERNAME}:${encodeURIComponent(
