@@ -9,6 +9,7 @@ docker-compose up backend
 > The `backend` service depends on `db` and `cache`, so these will be brought up automatically.
 
 ## MongoDB Shell
+
 ### Connect to MongoDB shell
 
 ```bash
@@ -64,6 +65,7 @@ flushall
 ## Routes
 
 ### Password Authentication
+
 ```bash
 # invalid passwords
 curl -v -X POST localhost:8080/register -H 'Content-Type: application/json' \
@@ -122,6 +124,18 @@ curl -v localhost:8080/me --cookie sid=s%3ATd2hIdcEKi5NjNcq5nKO_QDDBCSEg--f.aIJL
 curl -v localhost:8080/me
 ```
 
+# Deploying
+
+1. Create a new version of the backend container
+
+```bash
+docker build -t mattddean/auth_sample-backend .
+docker login
+docker push mattddean/auth_sample-backend
+```
+
 # TODO
 
 - secure=false on session cookie
+- CI/CD to build container
+- Terraform the whole cloud application
