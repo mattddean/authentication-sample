@@ -26,14 +26,14 @@ services:
     volumes:
       - ./backend:/usr/src/app
       - backend_home_npm:/home/node/.npm
-    environment: 
+    environment:
       - REDIS_HOST=cache
       - MONGO_HOST=db
     depends_on:
       - db
       - cache
     command: ["npm", "run", "dev"]
-  
+
   cache:
     image: redis:6.2.1-alpine
     ports:
@@ -42,7 +42,7 @@ services:
 
   db:
     image: mongo:3.6.22-xenial
-    ports: 
+    ports:
       - 27017:27017
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
@@ -53,6 +53,15 @@ services:
     volumes:
       - db_data:/data/db
       - ./db/mongo-init.sh:/docker-entrypoint-initdb.d/mongo-init.sh:ro
+
+  terraform:
+    image: hashicorp/terraform@sha256:a57d33be021f881d75264c840d2205a31e6ff2aa120ab3ceab61d2ca38281e17 # light
+    working_dir: /usr/src/app
+    user: $UID
+    volumes:
+      - ./terraform:/usr/src/app
+      - ${HOME}/.aws/credentials:/.aws/credentials:ro
+    entrypoint: sh
 
 volumes:
   # persistent npm cache

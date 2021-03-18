@@ -22,7 +22,7 @@ docker-compose exec cache redis-cli -a secret
 
 ### Delete all users
 
-From within MongoDB shell
+From within MongoDB shell:
 
 ```
 db.users.deleteMany({})
@@ -32,7 +32,7 @@ db.users.deleteMany({})
 
 ### Connect to Redis shell
 
-With the `backend` service running...
+With the `cache` service running:
 
 ```bash
 docker-compose exec cache redis-cli -a secret
@@ -40,7 +40,7 @@ docker-compose exec cache redis-cli -a secret
 
 ### View active sessions
 
-From within Redis shell
+From within Redis shell:
 
 ```bash
 scan 0
@@ -48,7 +48,7 @@ scan 0
 
 ### Get cookie information for a session
 
-From within Redis shell
+From within Redis shell:
 
 ```bash
 get "<session>"
@@ -56,10 +56,18 @@ get "<session>"
 
 ### Flush all sessions
 
-From within Redis shell
+From within Redis shell:
 
 ```bash
 flushall
+```
+
+## Terraform shell
+
+Assuming you already have an AWS credentials file at ~/.aws/credentials:
+
+```bash
+export UID && docker-compose run terraform
 ```
 
 ## Routes
@@ -139,3 +147,6 @@ docker push mattddean/auth_sample-backend
 - secure=false on session cookie
 - CI/CD to build container
 - Terraform the whole cloud application
+- Terraform S3 bucket for environment variables
+  - Should upload the .env.prod local file
+  - Or we could feed the environment variables in in the json file in terraform itself as we create the username and password for mongo and redis
