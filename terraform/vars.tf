@@ -1,5 +1,9 @@
 # https://geekrodion.medium.com/amazon-documentdb-and-aws-lambda-with-terraform-34a5d1061c15
 
+variable "stage" {
+  default = "production"
+}
+
 variable "region" {
   default = "us-west-2"
 }

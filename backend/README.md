@@ -1,4 +1,21 @@
-Based on YouTube series https://www.youtube.com/playlist?list=PLcCp4mjO-z9_HmJ5rSonmiEGfP-kyRMlI
+# Authentication Sample Backend
+
+# Overview and Credit
+
+Based on YouTube series https://www.youtube.com/playlist?list=PLcCp4mjO-z9_HmJ5rSonmiEGfP-kyRMlI with minor improvements such as:
+
+- Thwart timing attacks
+  - By hashing a dummy string
+    - The problem and solution were identified in the video series, but not implemented
+    <!-- - Send back user object during `/login` request rather than requiring a separate `/me` request -->
+- Fix types such that TypeScript compiles correctly
+- Build a production Docker image for cloud deployment
+
+## Features
+
+- Hashed passwords
+- Simple document databae (MongoDB) that would enable easy improvement and expansion of the project
+<!-- - Fully realized Terraform IoC with zero manual AWS configuration -->
 
 ## Start development environment
 
@@ -62,14 +79,6 @@ From within Redis shell:
 flushall
 ```
 
-## Terraform shell
-
-Assuming you already have an AWS credentials file at ~/.aws/credentials:
-
-```bash
-export UID && docker-compose run terraform
-```
-
 ## Routes
 
 ### Password Authentication
@@ -131,40 +140,3 @@ curl -v localhost:8080/me --cookie sid=s%3ATd2hIdcEKi5NjNcq5nKO_QDDBCSEg--f.aIJL
 # fail: without cookie (responds with {message: "You must be logged in"})
 curl -v localhost:8080/me
 ```
-
-# Deploying
-
-1. Create a new version of the backend container
-
-```bash
-docker build -t mattddean/auth_sample-backend .
-docker login
-docker push mattddean/auth_sample-backend
-```
-
-2. Copy secret.tfvars.example as secret.tfvars and fill in all of the variables
-
-3. Run terraform commands to build the app's infrastructure in AWS
-
-From within the [Terraform Shell](#terraform-shell):
-
-```bash
-terraform init
-terraform plan -var-file="secret.tfvars" -out plan.tfplan
-terraform apply "plan.tfplan"
-```
-
-# Destroying
-
-```bash
-terraform destroy -var-file="secret.tfvars"
-```
-
-# TODO
-
-- secure=false on session cookie
-- CI/CD to build container
-- Terraform the whole cloud application
-- Terraform S3 bucket for environment variables
-  - Should upload the .env.prod local file
-  - Or we could feed the environment variables in in the json file in terraform itself as we create the username and password for mongo and redis

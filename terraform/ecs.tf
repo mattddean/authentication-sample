@@ -19,6 +19,7 @@ resource "aws_ecs_task_definition" "auth_sample_backend_task" {
         }
       ],
       "environment": [
+        { "name": "NODE_ENV", "value": "${var.stage}" },
         { "name": "MONGO_USERNAME", "value": "${var.docdb_username}" },
         { "name": "MONGO_PASSWORD", "value": "${aws_docdb_cluster.service.master_password}" },
         { "name": "MONGO_HOST", "value": "${aws_docdb_cluster.service.endpoint}" },
@@ -46,10 +47,16 @@ resource "aws_ecs_task_definition" "auth_sample_backend_task" {
   memory                   = 512         # Specifying the memory our container requires
   cpu                      = 256         # Specifying the CPU our container requires
   execution_role_arn       = aws_iam_role.ecsExecuteTaskRole.arn
+  task_role_arn            = aws_iam_role.ecsInstanceRole.arn
 }
 
 resource "aws_iam_role" "ecsExecuteTaskRole" {
   name               = "ecsExecuteTaskRole"
+  assume_role_policy = data.aws_iam_policy_document.assume_role_policy.json
+}
+
+resource "aws_iam_role" "ecsInstanceRole" {
+  name               = "ecsInstanceRole"
   assume_role_policy = data.aws_iam_policy_document.assume_role_policy.json
 }
 
@@ -64,9 +71,38 @@ data "aws_iam_policy_document" "assume_role_policy" {
   }
 }
 
+data "aws_iam_policy_document" "createLogGroupPolicyDocument" {
+  statement {
+    sid = "1"
+    actions = [
+      "logs:CreateLogGroup"
+    ]
+    resources = [
+      "*",
+    ]
+  }
+}
+
+resource "aws_iam_policy" "createLogGroupPolicy" {
+  name        = "createLogGroup"
+  path        = "/service-role/"
+  description = "Enable logs CreateLogGroup on all resources"
+  policy      = data.aws_iam_policy_document.createLogGroupPolicyDocument.json
+}
+
 resource "aws_iam_role_policy_attachment" "ecsExecuteTaskRole_policy" {
   role       = aws_iam_role.ecsExecuteTaskRole.name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
+}
+
+resource "aws_iam_role_policy_attachment" "createLogGroupPolicy_policy" {
+  role       = aws_iam_role.ecsExecuteTaskRole.name
+  policy_arn = aws_iam_policy.createLogGroupPolicy.arn
+}
+
+resource "aws_iam_role_policy_attachment" "ecsInstanceRole_policy" {
+    role       = aws_iam_role.ecsInstanceRole.name
+    policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEC2ContainerServiceforEC2Role"
 }
 
 resource "aws_ecs_service" "auth_sample_backend" {
