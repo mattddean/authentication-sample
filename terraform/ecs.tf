@@ -27,6 +27,15 @@ resource "aws_ecs_task_definition" "auth_sample_backend_task" {
         { "name": "REDIS_PORT", "value": "${var.cache_port}" },
         { "name": "REDIS_HOST", "value": "${aws_elasticache_replication_group.default.primary_endpoint_address}" }
       ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "${var.name}",
+          "awslogs-region": "${var.region}",
+          "awslogs-stream-prefix": "backend",
+          "awslogs-create-group": "true"
+        }
+      },
       "memory": 512,
       "cpu": 256
     }
