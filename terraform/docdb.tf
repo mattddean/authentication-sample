@@ -2,7 +2,7 @@
 
 resource "aws_docdb_subnet_group" "service" {
   name       = "tf-${var.name}"
-  subnet_ids = [module.vpc.private_subnets]
+  subnet_ids = [element(aws_subnet.default.*.id, 0)]
 }
 
 resource "aws_docdb_cluster_instance" "service" {
@@ -17,10 +17,10 @@ resource "aws_docdb_cluster" "service" {
   db_subnet_group_name            = aws_docdb_subnet_group.service.name
   cluster_identifier              = "tf-${var.name}"
   engine                          = "docdb"
-  master_username                 = "tf_${replace(var.name, "-", "_")}_admin"
+  master_username                 = var.docdb_username
   master_password                 = var.docdb_password
   db_cluster_parameter_group_name = aws_docdb_cluster_parameter_group.service.name
-  vpc_security_group_ids          = [aws_security_group.service.id]
+  vpc_security_group_ids          = [aws_security_group.default.id]
 }
 
 resource "aws_docdb_cluster_parameter_group" "service" {

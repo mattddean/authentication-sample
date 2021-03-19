@@ -2,7 +2,7 @@
 
 resource "aws_security_group" "default" {
   name_prefix = var.name
-  vpc_id      = module.vpc.vpc_id
+  vpc_id      = aws_vpc.default.id
 
   ingress {
     from_port   = 0
@@ -21,15 +21,15 @@ resource "aws_security_group" "default" {
 
 resource "aws_elasticache_subnet_group" "default" {
   name       = "${var.name}-cache-subnet"
-  subnet_ids = [aws_subnet.default.*.id]
+  subnet_ids = aws_subnet.default.*.id
 }
 
 resource "aws_elasticache_replication_group" "default" {
-  replication_group_id          = var.cluster_id
-  replication_group_description = "Redis cluster for auth-sample"
+  replication_group_id          = "${var.name}-cluster"
+  replication_group_description = "Redis cluster for Hashicorp ElastiCache example"
 
-  node_type            = "cache.t3.micro"
-  port                 = var.cache_port
+  node_type            = "cache.m4.large"
+  port                 = 6379
   parameter_group_name = "default.redis3.2.cluster.on"
 
   snapshot_retention_limit = 5

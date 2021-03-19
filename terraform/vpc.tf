@@ -1,37 +1,43 @@
-# https://geekrodion.medium.com/amazon-documentdb-and-aws-lambda-with-terraform-34a5d1061c15
+# https://github.com/hashicorp/terraform-elasticache-example/blob/master/network.tf
 
-module "vpc" {
-  source = "terraform-aws-modules/vpc/aws"
-
-  name = "tf-${var.name}"
-  cidr = "10.0.0.0/16"
-
-  azs             = ["${var.region}a", "${var.region}b", "${var.region}c"]
-  private_subnets = ["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24"]
-  public_subnets  = ["10.0.101.0/24", "10.0.102.0/24", "10.0.103.0/24"]
-
+# Create a VPC to launch our instances into
+resource "aws_vpc" "default" {
+  cidr_block           = var.vpc_cidr_block
   enable_dns_hostnames = true
-  enable_dns_support   = true
-  enable_nat_gateway   = true
-  enable_vpn_gateway   = true
-  single_nat_gateway   = false
+
+  tags = {
+    Name = var.name
+  }
 }
 
-resource "aws_security_group" "service" {
-  name   = "tf-${var.name}"
-  vpc_id = module.vpc.vpc_id
+# Create an internet gateway to give our subnet access to the outside world
+resource "aws_internet_gateway" "default" {
+  vpc_id = aws_vpc.default.id
 
-  ingress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
+  tags = {
+    Name = var.name
   }
+}
 
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
+# Grant the VPC internet access on its main route table
+resource "aws_route" "internet_access" {
+  route_table_id         = aws_vpc.default.main_route_table_id
+  destination_cidr_block = "0.0.0.0/0"
+  gateway_id             = aws_internet_gateway.default.id
+}
+
+# Grab the list of availability zones
+data "aws_availability_zones" "available" {}
+
+# Create a subnet to launch our instances into
+resource "aws_subnet" "default" {
+  count                   = length(var.cidr_blocks)
+  vpc_id                  = aws_vpc.default.id
+  availability_zone       = data.aws_availability_zones.available.names[count.index]
+  cidr_block              = var.cidr_blocks[count.index]
+  map_public_ip_on_launch = true
+
+  tags = {
+    Name = var.name
   }
 }

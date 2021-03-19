@@ -18,8 +18,8 @@ data "aws_ami" "service" {
 
 resource "aws_instance" "service" {
   ami                    = data.aws_ami.service.id
-  vpc_security_group_ids = [aws_security_group.service.id]
-  subnet_id              = module.vpc.public_subnets[0]
+  vpc_security_group_ids = [aws_security_group.default.id]
+  subnet_id              = element(aws_subnet.default.*.id, 0)
   instance_type          = "t2.micro"
   key_name               = aws_key_pair.service.key_name
 
@@ -36,7 +36,7 @@ resource "aws_instance" "service" {
       "echo 'deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu xenial/mongodb-org/3.6 multiverse' | sudo tee /etc/apt/sources.list.d/mongodb-org-3.6.list",
       "sudo apt-get update",
       "sudo apt-get install -y mongodb-org-shell",
-      "MONGO_INITDB_DATABASE=${vars.docdb_initdb_db_name} MONGO_USERNAME=${aws_docdb_cluster.service.master_username} MONGO_PASSWORD=${aws_docdb_cluster.service.master_password} sudo /provision/external/mongo/mongo-init.sh",
+      "MONGO_INITDB_DATABASE=${var.docdb_initdb_db_name} MONGO_USERNAME=${aws_docdb_cluster.service.master_username} MONGO_PASSWORD=${aws_docdb_cluster.service.master_password} sudo /provision/external/mongo/mongo-init.sh",
       "sudo shutdown -P now" # power off instance; it'll always be there for us later if we need to start it back up and run more mongo commands
     ]
   }
@@ -45,6 +45,7 @@ resource "aws_instance" "service" {
     type        = "ssh"
     user        = "ubuntu"
     private_key = tls_private_key.service.private_key_pem
+    host        = self.public_ip
   }
 }
 

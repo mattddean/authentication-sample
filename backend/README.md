@@ -150,8 +150,8 @@ From within the [Terraform Shell](#terraform-shell):
 
 ```bash
 terraform init
-terraform plan -var-file="secret.tfvars"
-terraform apply
+terraform plan -var-file="secret.tfvars" -out plan
+terraform apply "plan"
 ```
 
 # TODO

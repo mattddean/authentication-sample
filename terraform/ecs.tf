@@ -18,6 +18,17 @@ resource "aws_ecs_task_definition" "auth_sample_backend_task" {
           "hostPort": 3000
         }
       ],
+      "environment": [
+        {
+          "MONGO_USERNAME": "${var.docdb_username}",
+          "MONGO_PASSWORD": "${aws_docdb_cluster.service.master_password}",
+          "MONGO_HOST": "${aws_docdb_cluster.service.endpoint}",
+          "MONGO_PORT": "${aws_docdb_cluster.service.port}",
+          "MONGO_DATABASE": "${var.docdb_initdb_db_name}",
+          "REDIS_PORT": "${var.cache_port}",
+          "REDIS_HOST": "${aws_elasticache_replication_group.default.primary_endpoint_address}"
+        }
+      ],
       "memory": 512,
       "cpu": 256
     }
@@ -28,24 +39,6 @@ resource "aws_ecs_task_definition" "auth_sample_backend_task" {
   memory                   = 512         # Specifying the memory our container requires
   cpu                      = 256         # Specifying the CPU our container requires
   execution_role_arn       = aws_iam_role.ecsTaskExecutionRole.arn
-
-  vpc_config {
-    subnet_ids         = [module.vpc.public_subnets, aws_subnet.default.*.id]
-    security_group_ids = [aws_security_group.service.id]
-  }
-
-  environment {
-    variables {
-      MONGO_USERNAME = aws_docdb_cluster.service.master_username
-      MONGO_PASSWORD = aws_docdb_cluster.service.master_password
-      MONGO_HOST     = aws_docdb_cluster.service.endpoint
-      MONGO_PORT     = aws_docdb_cluster.service.port
-      MONGO_DATABASE = var.docdb_initdb_db_name
-
-      REDIS_PORT     = var.cache_port
-      REDIS_HOST     = aws_elasticache_replication_group.default.primary_endpoint_address
-    }
-  }
 }
 
 resource "aws_iam_role" "ecsTaskExecutionRole" {
@@ -77,7 +70,10 @@ resource "aws_ecs_service" "auth_sample_backend" {
   desired_count   = 1
 
   network_configuration {
-    subnets          = [aws_default_subnet.default_subnet_a.id, aws_default_subnet.default_subnet_b.id, aws_default_subnet.default_subnet_c.id]
+    # https://github.com/hashicorp/terraform-elasticache-example/blob/master/ssh.tf
+    subnets         = [element(aws_subnet.default.*.id, 0)]
+    security_groups = [aws_security_group.default.id]
+
     assign_public_ip = true
   }
 }

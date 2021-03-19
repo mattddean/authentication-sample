@@ -15,3 +15,12 @@ output "docdb_username" {
 output "name" {
   value = var.name
 }
+
+# https://github.com/hashicorp/terraform-elasticache-example/blob/master/output.tf
+output "cache_configuration_endpoint_address" {
+  value = aws_elasticache_replication_group.default.configuration_endpoint_address
+}
+
+output "mongo_shell_instance_ip" {
+  value = aws_instance.service.public_ip
+}
