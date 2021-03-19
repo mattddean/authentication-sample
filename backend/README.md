@@ -142,6 +142,18 @@ docker login
 docker push mattddean/auth_sample-backend
 ```
 
+2. Copy secret.tfvars.example as secret.tfvars and fill in all of the variables
+
+3. Run terraform commands to build the app's infrastructure in AWS
+
+From within the [Terraform Shell](#terraform-shell):
+
+```bash
+terraform init
+terraform plan -var-file="secret.tfvars"
+terraform apply
+```
+
 # TODO
 
 - secure=false on session cookie
