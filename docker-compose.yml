@@ -61,6 +61,7 @@ services:
     volumes:
       - ./terraform:/usr/src/app
       - ${HOME}/.aws/credentials:/.aws/credentials:ro
+      - ./db/mongo-init.sh:/usr/src/files/mongo-init.sh:ro
     entrypoint: sh
 
 volumes:

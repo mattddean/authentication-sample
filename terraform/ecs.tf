@@ -19,15 +19,13 @@ resource "aws_ecs_task_definition" "auth_sample_backend_task" {
         }
       ],
       "environment": [
-        {
-          "MONGO_USERNAME": "${var.docdb_username}",
-          "MONGO_PASSWORD": "${aws_docdb_cluster.service.master_password}",
-          "MONGO_HOST": "${aws_docdb_cluster.service.endpoint}",
-          "MONGO_PORT": "${aws_docdb_cluster.service.port}",
-          "MONGO_DATABASE": "${var.docdb_initdb_db_name}",
-          "REDIS_PORT": "${var.cache_port}",
-          "REDIS_HOST": "${aws_elasticache_replication_group.default.primary_endpoint_address}"
-        }
+        { "name": "MONGO_USERNAME", "value": "${var.docdb_username}" },
+        { "name": "MONGO_PASSWORD", "value": "${aws_docdb_cluster.service.master_password}" },
+        { "name": "MONGO_HOST", "value": "${aws_docdb_cluster.service.endpoint}" },
+        { "name": "MONGO_PORT", "value": "${aws_docdb_cluster.service.port}" },
+        { "name": "MONGO_DATABASE", "value": "${var.docdb_initdb_db_name}" },
+        { "name": "REDIS_PORT", "value": "${var.cache_port}" },
+        { "name": "REDIS_HOST", "value": "${aws_elasticache_replication_group.default.primary_endpoint_address}" }
       ],
       "memory": 512,
       "cpu": 256
@@ -38,11 +36,11 @@ resource "aws_ecs_task_definition" "auth_sample_backend_task" {
   network_mode             = "awsvpc"    # Using awsvpc as our network mode as this is required for Fargate
   memory                   = 512         # Specifying the memory our container requires
   cpu                      = 256         # Specifying the CPU our container requires
-  execution_role_arn       = aws_iam_role.ecsTaskExecutionRole.arn
+  execution_role_arn       = aws_iam_role.ecsExecuteTaskRole.arn
 }
 
-resource "aws_iam_role" "ecsTaskExecutionRole" {
-  name               = "ecsTaskExecutionRole"
+resource "aws_iam_role" "ecsExecuteTaskRole" {
+  name               = "ecsExecuteTaskRole"
   assume_role_policy = data.aws_iam_policy_document.assume_role_policy.json
 }
 
@@ -57,8 +55,8 @@ data "aws_iam_policy_document" "assume_role_policy" {
   }
 }
 
-resource "aws_iam_role_policy_attachment" "ecsTaskExecutionRole_policy" {
-  role       = aws_iam_role.ecsTaskExecutionRole.name
+resource "aws_iam_role_policy_attachment" "ecsExecuteTaskRole_policy" {
+  role       = aws_iam_role.ecsExecuteTaskRole.name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
 }
 

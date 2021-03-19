@@ -13,7 +13,7 @@ variable "docdb_initdb_db_name" {
 }
 
 variable "docdb_username" {
-  default = "admin"
+  default = "auth"
 }
 
 variable "docdb_instance_class" {

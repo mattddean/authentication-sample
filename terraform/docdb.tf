@@ -2,7 +2,7 @@
 
 resource "aws_docdb_subnet_group" "service" {
   name       = "tf-${var.name}"
-  subnet_ids = [element(aws_subnet.default.*.id, 0)]
+  subnet_ids = aws_subnet.default.*.id
 }
 
 resource "aws_docdb_cluster_instance" "service" {
