@@ -37,5 +37,7 @@ resource "aws_elasticache_replication_group" "default" {
   subnet_group_name          = aws_elasticache_subnet_group.default.name
   automatic_failover_enabled = false
 
+  security_group_ids = [ aws_security_group.default.id ]
+
   number_cache_clusters = 1
 }
