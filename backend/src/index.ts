@@ -12,9 +12,10 @@ import {
 import { createApp } from "./app";
 
 (async () => {
-  mongoose.connect(MONGO_URI, MONGO_OPTIONS);
+  console.log(`Will attempt to connect to Redis at endpoint ${REDIS_HOST}`);
+  console.log(`Will attempt to connect to Mongo at endpoint ${MONGO_URI}`);
 
-  console.log(`Will connect to redis at endpoint ${REDIS_HOST}`);
+  mongoose.connect(MONGO_URI, MONGO_OPTIONS);
 
   const RedisStore = connectRedis(session);
 
