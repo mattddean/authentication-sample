@@ -2,11 +2,19 @@ import mongoose from "mongoose";
 import Redis from "ioredis";
 import session from "express-session";
 import connectRedis from "connect-redis";
-import { MONGO_URI, MONGO_OPTIONS, REDIS_OPTIONS, APP_PORT } from "./config";
+import {
+  MONGO_URI,
+  MONGO_OPTIONS,
+  REDIS_OPTIONS,
+  APP_PORT,
+  REDIS_HOST,
+} from "./config";
 import { createApp } from "./app";
 
 (async () => {
   mongoose.connect(MONGO_URI, MONGO_OPTIONS);
+
+  console.log(`Will connect to redis at endpoint ${REDIS_HOST}`);
 
   const RedisStore = connectRedis(session);
 

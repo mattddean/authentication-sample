@@ -13,6 +13,7 @@ export UID && docker-compose run terraform
 1. Create a new version of the backend container
 
 ```bash
+cd ../backend
 docker build -t mattddean/auth_sample-backend .
 docker login
 docker push mattddean/auth_sample-backend

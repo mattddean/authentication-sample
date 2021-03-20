@@ -2,7 +2,7 @@
 
 # Overview and Credit
 
-Based on YouTube series https://www.youtube.com/playlist?list=PLcCp4mjO-z9_HmJ5rSonmiEGfP-kyRMlI with minor improvements such as:
+From YouTube series https://www.youtube.com/playlist?list=PLcCp4mjO-z9_HmJ5rSonmiEGfP-kyRMlI, plus improvements such as:
 
 - Thwart timing attacks
   - By hashing a dummy string
@@ -20,7 +20,7 @@ Based on YouTube series https://www.youtube.com/playlist?list=PLcCp4mjO-z9_HmJ5r
 ## Start development environment
 
 ```bash
-docker-compose up backend
+CURRENT_USER_ID=$(id -u) CURRENT_GROUP_ID=$(id -g) docker-compose up backend
 ```
 
 > The `backend` service depends on `db` and `cache`, so these will be brought up automatically.
