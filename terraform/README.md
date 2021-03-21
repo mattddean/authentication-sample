@@ -36,3 +36,11 @@ terraform apply "plan.tfplan"
 ```bash
 terraform destroy -var-file="secret.tfvars"
 ```
+
+## Connecting to Mongo Shell (EC2 Instance)
+
+You can connect using the private key that terraform creates when applying the plan called "tf-auth-sample-ec2" and the IP Address that is exposed as `mongo_shell_instance_ip` as an output after applying the plan
+
+```bash
+ssh -i ./tf-auth-sample-ec2 ubuntu@<mongo_shell_instance_ip>
+```
