@@ -36,8 +36,7 @@ resource "aws_instance" "service" {
       "echo 'deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu xenial/mongodb-org/3.6 multiverse' | sudo tee /etc/apt/sources.list.d/mongodb-org-3.6.list",
       "sudo apt-get update",
       "sudo apt-get install -y mongodb-org-shell",
-      "MONGO_INITDB_DATABASE=${var.docdb_initdb_db_name} MONGO_USERNAME=${aws_docdb_cluster.service.master_username} MONGO_PASSWORD=${aws_docdb_cluster.service.master_password} sudo /tmp/mongo-init.sh",
-      "sudo shutdown -P +1 &" # power off instance; it'll always be there for us later if we need to start it back up and run more mongo commands
+      "sudo shutdown -P now &" # power off instance; it'll always be there for us later if we need to start it back up and run more mongo commands
     ]
   }
 
