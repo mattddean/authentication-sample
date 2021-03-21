@@ -6,9 +6,9 @@ WORKDIR /usr/src/app
 
 RUN mkdir -p /usr/src/app
 
-RUN wget https://s3.amazonaws.com/rds-downloads/rds-combined-ca-bundle.pem
-
 COPY . /usr/src/app
+
+RUN wget https://s3.amazonaws.com/rds-downloads/rds-combined-ca-bundle.pem --directory-prefix /usr/src/app/dist
 
 RUN npm ci \
   && npm run build-prod
