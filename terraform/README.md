@@ -44,3 +44,13 @@ You can connect using the private key that terraform creates when applying the p
 ```bash
 ssh -i ./tf-auth-sample-ec2 ubuntu@<mongo_shell_instance_ip>
 ```
+
+## Connecting to Running ECS Container on AWS
+
+You can connect using the private key of the user that ran the terraform plan/apply commands. If you used the terraform docker container, it will be
+
+```bash
+ssh ec2-user@<public_dns>
+docker ps # to get Container's ID
+docker exec -it <container_id> sh
+```
