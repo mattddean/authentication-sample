@@ -12,6 +12,8 @@ export UID && docker-compose run terraform
 
 1. Create a new version of the backend container
 
+In your host machine's shell:
+
 ```bash
 cd ../backend
 docker build -t mattddean/auth_sample-backend .
@@ -51,6 +53,7 @@ You can connect using the private key of the user that ran the terraform plan/ap
 
 ```bash
 ssh ec2-user@<public_dns>
+sudo su -
 docker ps # to get Container's ID
 docker exec -it <container_id> sh
 ```
