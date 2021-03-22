@@ -28,8 +28,8 @@ resource "aws_elasticache_replication_group" "default" {
   replication_group_id          = "${var.name}-cluster"
   replication_group_description = "Redis cluster for Hashicorp ElastiCache example"
 
-  node_type            = "cache.t2.micro"
-  port                 = var.cache_port
+  node_type = "cache.t2.micro"
+  port      = var.cache_port
 
   snapshot_retention_limit = 5
   snapshot_window          = "00:00-05:00"
@@ -37,7 +37,7 @@ resource "aws_elasticache_replication_group" "default" {
   subnet_group_name          = aws_elasticache_subnet_group.default.name
   automatic_failover_enabled = false
 
-  security_group_ids = [ aws_security_group.default.id ]
+  security_group_ids = [aws_security_group.default.id]
 
   number_cache_clusters = 1
 }
